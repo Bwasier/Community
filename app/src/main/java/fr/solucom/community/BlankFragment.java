@@ -4,33 +4,28 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NewsFragment.OnFragmentInteractionListener} interface
+ * {@link BlankFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NewsFragment#newInstance} factory method to
+ * Use the {@link BlankFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsFragment extends Fragment {
+public class BlankFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "width";
-    private static final String ARG_PARAM2 = "height";
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private  int width;
-    private  int height;
+    private String mParam1;
+    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,21 +33,21 @@ public class NewsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param width Parameter 1.
-     * @param height Parameter 2.
-     * @return A new instance of fragment NewsFragment.
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment BlankFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewsFragment newInstance(int width, int height) {
-        NewsFragment fragment = new NewsFragment();
+    public static BlankFragment newInstance(String param1, String param2) {
+        BlankFragment fragment = new BlankFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, width);
-        args.putInt(ARG_PARAM2, height);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public NewsFragment() {
+    public BlankFragment() {
         // Required empty public constructor
     }
 
@@ -60,31 +55,16 @@ public class NewsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            width = getArguments().getInt(ARG_PARAM1);
-            height = getArguments().getInt(ARG_PARAM2);
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment and start the Recycle view
-        View rootView= inflater.inflate(R.layout.fragment_news, container, false);
-        //TODO
-        this.height= (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,this.height, getResources().getDisplayMetrics());
-        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,this.height);
-        rootView.setLayoutParams(p);
-        //Configure the recycle view
-        RecyclerView mainListrv = (RecyclerView) rootView.findViewById(R.id.newsList);
-        mainListrv.setItemAnimator(new DefaultItemAnimator());
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        mainListrv.setLayoutManager(llm);
-        //TODO ADD Data (as example some data are implemented)
-        RecyclerviewAdapter adapter = new RecyclerviewAdapter(DataExtractor.getCreateList());
-        mainListrv.setAdapter(adapter);
-
-        return rootView;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_blank, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -110,14 +90,7 @@ public class NewsFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-    public void resizeFragment(int newWidth, int newHeight) {
-        if (this != null) {
-            View view = this.getView();
-            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(newWidth, newHeight);
-            view.setLayoutParams(p);
-            view.requestLayout();
-        }
-    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -132,7 +105,5 @@ public class NewsFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
-
 
 }

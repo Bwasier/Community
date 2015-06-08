@@ -97,6 +97,7 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
+        //set the menu for the navigation drawer
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
@@ -113,6 +114,7 @@ public class NavigationDrawerFragment extends Fragment {
 
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        mDrawerListView.setFitsSystemWindows(true);
         return mDrawerListView;
     }
 

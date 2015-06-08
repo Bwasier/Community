@@ -18,11 +18,11 @@ import android.widget.RelativeLayout;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link NewsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * to handle interaction Solucom.
  * Use the {@link NewsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsFragment extends Fragment {
+public class KnowledgeManagementFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "width";
@@ -52,7 +52,7 @@ public class NewsFragment extends Fragment {
         return fragment;
     }
 
-    public NewsFragment() {
+    public KnowledgeManagementFragment() {
         // Required empty public constructor
     }
 
@@ -75,8 +75,9 @@ public class NewsFragment extends Fragment {
         this.height= (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,this.height, getResources().getDisplayMetrics());
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,this.height);
         rootView.setLayoutParams(p);
+        //TODO change the recycler view or delete it 
         //Configure the recycle view
-        RecyclerView mainListrv = (RecyclerView) rootView.findViewById(R.id.newsList);
+        RecyclerView mainListrv = (RecyclerView) rootView.findViewById(R.id.eventsList);
         mainListrv.setItemAnimator(new DefaultItemAnimator());
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         mainListrv.setLayoutManager(llm);
