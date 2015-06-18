@@ -14,23 +14,17 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NewsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NewsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NewsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "width";
     private static final String ARG_PARAM2 = "height";
+    private static final String ARG_PARAM3 = "UUIDbeacon";
 
     // TODO: Rename and change types of parameters
     private  int width;
     private  int height;
+    private String UUIDbeacon;
 
     private OnFragmentInteractionListener mListener;
 
@@ -40,14 +34,17 @@ public class NewsFragment extends Fragment {
      *
      * @param width Parameter 1.
      * @param height Parameter 2.
+     *@param UUIDbeacon Parameter 2.
+     *
      * @return A new instance of fragment NewsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewsFragment newInstance(int width, int height) {
+    public static NewsFragment newInstance(int width, int height, String UUIDbeacon) {
         NewsFragment fragment = new NewsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, width);
         args.putInt(ARG_PARAM2, height);
+        args.putString(ARG_PARAM3, UUIDbeacon);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +59,7 @@ public class NewsFragment extends Fragment {
         if (getArguments() != null) {
             width = getArguments().getInt(ARG_PARAM1);
             height = getArguments().getInt(ARG_PARAM2);
+            UUIDbeacon = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -130,7 +128,7 @@ public class NewsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 

@@ -8,42 +8,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NewsTitleFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NewsTitleFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NewsTitleFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "floor";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String floor;
+
     private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param floor Parameter 1.
      * @return A new instance of fragment NewsTitleFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewsTitleFragment newInstance(String param1, String param2) {
+    public static NewsTitleFragment newInstance(String floor) {
         NewsTitleFragment fragment = new NewsTitleFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, floor);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +47,7 @@ public class NewsTitleFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            floor = getArguments().getString(ARG_PARAM1);
         }
     }
 
@@ -65,8 +55,8 @@ public class NewsTitleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_news_title, container, false);
-
-        // Inflate the layout for this fragment
+        TextView textTitle = (TextView) view.findViewById(R.id.NewsTitle);
+        textTitle.setText("Actualites de l\' etage " + floor);
         return view;
 
     }
@@ -106,7 +96,7 @@ public class NewsTitleFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 }

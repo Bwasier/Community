@@ -6,29 +6,20 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity
         implements
@@ -46,6 +37,11 @@ public class MainActivity extends Activity
             FoodTitleFragment.OnFragmentInteractionListener
         {
 
+    //TODO remove this part and catch the beconID
+    public String UUIDbeacon = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
+    public String floor = "connexion...";
+    String url ="http://10.100.203.13/floor";
+    JSONObject rep = null;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -59,8 +55,10 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        //call the dataCollector with the UUID and the home page. When data arrived, update data is call
+        collectData(UUIDbeacon, "home");
+        setContentView(R.layout.activity_main);
         //Create a new drawer
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -89,28 +87,27 @@ public class MainActivity extends Activity
         switch (position) {
             // default is the home so call the home frag and change title on the action bar
             default:
-                fragmentTitle1 = new NewsTitleFragment();
-//TODO implement new fragment with parameters (height is not considered so far)
-                fragment1= NewsFragment.newInstance(0,240);
-                fragmentTitle2 = new EventsTitleFragment();
+                fragmentTitle1 = NewsTitleFragment.newInstance(floor);
+                fragment1= NewsFragment.newInstance(0,240,floor);
+                fragmentTitle2 = EventsTitleFragment.newInstance(floor);
                 fragment2= EventsFragment.newInstance(0,240);
-                mTitle = getString(R.string.title_section1);
+                mTitle = getString(R.string.title_section1) +" " + floor;
                 break;
             // News selected
             case 1:
-                fragmentTitle1 = new NewsTitleFragment();
-                fragment1= NewsFragment.newInstance(0,490);
+                fragmentTitle1 = NewsTitleFragment.newInstance(floor);
+                fragment1= NewsFragment.newInstance(0,490,"17");
                 fragmentTitle2 = new BlankFragment();
                 fragment2= new BlankFragment();
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.title_section2) +" " + floor;
                 break;
             // Events selected on the main
             case 2:
-                fragmentTitle1 = new EventsTitleFragment();
+                fragmentTitle1 = EventsTitleFragment.newInstance(floor);
                 fragment1= EventsFragment.newInstance(0,490);
                 fragmentTitle2 = new BlankFragment();
                 fragment2= new BlankFragment();
-                mTitle = getString(R.string.title_section3);
+                mTitle = getString(R.string.title_section3) +" " + floor;
                 break;
             //TODO
             case 3:
@@ -126,7 +123,7 @@ public class MainActivity extends Activity
                 fragment1= FoodFragment.newInstance(0,240);
                 fragmentTitle2 = new FoodTitleFragment();
                 fragment2= FoodFragment.newInstance(0,240);
-                mTitle = getString(R.string.title_section5);
+                mTitle = getString(R.string.title_section5) ;
                 break;
             //TODO
             case 5:
@@ -189,5 +186,43 @@ public class MainActivity extends Activity
         //leave it empty
     }
 
+    //TODO put it in other activity
+    public void collectData(String idBeacon, String page) {
+
+        url=url+"/"+idBeacon+"/"+page;
+
+        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                try {
+                    updateData(jsonObject.getJSONObject("home"));
+
+                    //TODO
+                } catch (JSONException volleyError) {
+                    Toast.makeText(getApplicationContext(),
+                            volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(getApplicationContext(),
+                                volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        ApplicationController.getInstance().getRequestQueue().add(request);
+
+     }
+    public void updateData(JSONObject JsonObject){
+        try {
+        floor= JsonObject.getString("floor");
+        onNavigationDrawerItemSelected(0);
+        }catch (JSONException volleyError) {
+            Toast.makeText(getApplicationContext(),
+                    volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+    }
 }
 
