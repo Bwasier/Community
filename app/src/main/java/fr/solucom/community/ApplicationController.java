@@ -5,20 +5,20 @@ package fr.solucom.community;
  */
 //Class used to intialize all the volley core objects
 import android.app.Application;
+import android.content.Intent;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 public class ApplicationController extends Application {
-    private static ApplicationController sInstance;
 
+    private static ApplicationController sInstance;
     private RequestQueue mRequestQueue;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         mRequestQueue = Volley.newRequestQueue(this);
-
         sInstance = this;
     }
 
@@ -29,4 +29,5 @@ public class ApplicationController extends Application {
     public RequestQueue getRequestQueue() {
         return mRequestQueue;
     }
+
 }

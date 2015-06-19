@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Comm\'unity</string>
 
-    <string name="title_section1">Accueil de l\'etage</string>
-    <string name="title_section2">Actualites</string>
+    <string name="title_section1">Accueil de l\'étage</string>
+    <string name="title_section2">Actualités</string>
     <string name="title_section3">Evenements</string>
     <string name="title_section4">Knowledge Management</string>
     <string name="title_section5">Au menu ce midi</string>
@@ -10,7 +11,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Parametres</string>
+    <string name="action_settings">Paramètres</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello Home fragment =) </string>

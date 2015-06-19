@@ -18,8 +18,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import com.estimote.sdk.Beacon;
+import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.Region;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.estimote.sdk.BeaconManager.MonitoringListener;
+
 
 public class MainActivity extends Activity
         implements
@@ -37,8 +44,12 @@ public class MainActivity extends Activity
             FoodTitleFragment.OnFragmentInteractionListener
         {
 
+
+
     //TODO remove this part and catch the beconID
-    public String UUIDbeacon = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
+    public String UUIDbeacon = null;
+    public int major = 0;
+    public int minor = 0;
     public String floor = "connexion...";
     String url ="http://10.100.203.13/floor";
     JSONObject rep = null;
@@ -55,9 +66,20 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //call the dataCollector with the UUID and the home page. When data arrived, update data is call
-        collectData(UUIDbeacon, "home");
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                major= 0;
+                minor= 0;
+                UUIDbeacon= null;
+            } else {
+                UUIDbeacon=extras.getString("UUID");
+                major=extras.getInt("major");
+                minor = extras.getInt("minor");
+            }
+        }
+        //call the dataCollector with the UUID, minor, major and the home page. When data arrived, update data is call
+        collectData(UUIDbeacon,major,minor, "home");
         setContentView(R.layout.activity_main);
         //Create a new drawer
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -187,9 +209,9 @@ public class MainActivity extends Activity
     }
 
     //TODO put it in other activity
-    public void collectData(String idBeacon, String page) {
+    public void collectData(String idBeacon,int major,int minor,String page) {
 
-        url=url+"/"+idBeacon+"/"+page;
+        url=url+"/"+idBeacon+"/"+major+"/"+minor+"/"+page;
 
         JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -217,6 +239,7 @@ public class MainActivity extends Activity
      }
     public void updateData(JSONObject JsonObject){
         try {
+            //TODO to be improved
         floor= JsonObject.getString("floor");
         onNavigationDrawerItemSelected(0);
         }catch (JSONException volleyError) {
