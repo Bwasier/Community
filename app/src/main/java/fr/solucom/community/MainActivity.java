@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import org.json.JSONObject;
 
 import fr.solucom.communitylibrary.ConnectionsChecker;
+import fr.solucom.communitylibrary.DataCollector;
 import fr.solucom.communitylibrary.DataUpdator;
 import fr.solucom.communitylibrary.GeneralData;
 import fr.solucom.communitylibrary.Home;
@@ -92,14 +93,10 @@ public class MainActivity extends Activity
         ConnectionsChecker.checkInternetAccess(this);
 
         if (savedInstanceState == null) {
-
             //Used to get arguments caught by the service
             Bundle extras = getIntent().getExtras();
-
             if (extras == null) {
-
                 Log.d(TAG, "extras not found (null)");
-
                 //If extras is null, the application has been launched manually.
                 // Informs the user that the application will be launched automatically then closes the activity
                 Toast.makeText(getApplicationContext(), "Une notification vous sera envoyée à la réception du signal d'une balise.",
@@ -107,7 +104,6 @@ public class MainActivity extends Activity
                 //closes the current activity
                 this.finish();
             } else {
-
                 //Catches values from the service Estimote Manager.
                 // UUID of the beacon detected, major and minor
                 UUIDbeacon = extras.getString("UUID");
@@ -119,10 +115,19 @@ public class MainActivity extends Activity
         if (UUIDbeacon != null && major != 0 && minor != 0) {
             //Logs the beacon detected
             Log.d(TAG, "collectData called with : UUID :" + UUIDbeacon + " major: " + major + " minor: " + minor);
-
-            //Uses the DataCollector collectGeneralData method with parameters caught. {@link #collectGeneralData()}.
-            DataCollector.collectGeneralData(url, this);
-
+            //Uses the DataCollector collectGeneralData method with parameters caught.
+            DataCollector.collectGeneralData(url, new DataCollector.VolleyCallback() {
+                @Override
+                public void onSuccess(JSONObject jsonObject) {
+                    updateGeneralData(jsonObject);
+                }
+            });
+            DataCollector.collectHomeData(url, UUIDbeacon, major, minor, "home", new DataCollector.VolleyCallback() {
+                @Override
+                public void onSuccess(JSONObject jsonObject) {
+                    updateData(jsonObject);
+                }
+            });
         }
         // select the appropriate view for main activity
         setContentView(R.layout.activity_main);
@@ -216,7 +221,7 @@ public class MainActivity extends Activity
     /**
      * Method called to restore the action bar
      *
-     * @see MainActivity#updateData(JSONObject, String)
+     * @see MainActivity#updateData(JSONObject)
      */
     public void restoreActionBar() {
         //get the action bar
@@ -286,12 +291,10 @@ public class MainActivity extends Activity
      *
      *
      * @param JsonObject JsonObject that represents the "home" sent by the server
-     * @param page the page required by the user (e.g Home, KM store, Restaurant)
      * @see DataCollector
      * @see Gson
      */
-    public void updateData(JSONObject JsonObject, String page) {
-
+    public void updateData(JSONObject JsonObject) {
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         this.home = DataUpdator.updateData(JsonObject);
@@ -307,13 +310,10 @@ public class MainActivity extends Activity
      *
      * @param JsonObject A JSON object sent by the server
      * @see DataCollector
+     * @see DataUpdator
      * @see Gson
      */
     public void updateGeneralData(JSONObject JsonObject) {
         this.generalData = DataUpdator.updateGeneralData(JsonObject);
-        //Uses the DataCollector collectHomeData method with parameters caught. {@link #collectHomeData()}.
-        DataCollector.collectHomeData(url, UUIDbeacon, major, minor, "home", this);
     }
-
 }
-
