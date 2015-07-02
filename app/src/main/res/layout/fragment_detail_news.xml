@@ -11,17 +11,17 @@
 
 
         <ImageView
-            android:id="@+id/imageDetailSolucom"
+            android:id="@+id/imageDetailNews"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:orientation="vertical"
             android:scaleType="centerCrop" />
 
         <TextView
-            android:id="@+id/TitleDetailSolucom"
+            android:id="@+id/TitleDetailNews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/Solucom_Description"
+            android:layout_above="@+id/News_Description"
             android:background="#50000000"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
@@ -30,10 +30,10 @@
 
 
         <TextView
-            android:id="@+id/Solucom_Description"
+            android:id="@+id/News_Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageDetailSolucom"
+            android:layout_below="@+id/imageDetailNews"
             android:layout_marginBottom="2dp"
             android:minHeight="100dp"
             android:paddingLeft="16dp"

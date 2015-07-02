@@ -1,67 +1,83 @@
 package fr.solucom.community;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
+import fr.solucom.communitylibrary.ApplicationController;
+import fr.solucom.communitylibrary.Home;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NewsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NewsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Events fragment is used to display events information on the home page.
+ * This fragment displays the title of the event part for the floor detected (the beacon),
+ * the event part's picture, and a short description of the  events.
  */
 public class EventsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "width";
-    private static final String ARG_PARAM2 = "height";
-
-    // TODO: Rename and change types of parameters
-    private  int width;
-    private  int height;
-
+    private static final String HOME = "home";
+    private static final String TAG = "EventsFragment";
+    // initializes the home that will be used to inflate the view
+    private Home home;
+    //Initializes the listener
     private OnFragmentInteractionListener mListener;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param width Parameter 1.
-     * @param height Parameter 2.
-     * @return A new instance of fragment NewsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static NewsFragment newInstance(int width, int height) {
-        NewsFragment fragment = new NewsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, width);
-        args.putInt(ARG_PARAM2, height);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public EventsFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * This method is used to create a new instance of EventsFragment.
+     * The home is passed as argument and the new fragment is returned
+     *
+     * @param  home     The home object used to inflate the view
+     *
+     * @return fragment the EventsFragment created with the home passed as argument
+     *
+     * @see fr.solucom.communitylibrary.Home
+     * @see fr.solucom.communitylibrary.Event
+
+     *
+     */
+    public static EventsFragment newInstance(Home home) {
+        //creates the new fragment
+        EventsFragment fragment = new EventsFragment();
+        //create the associated bundle
+        Bundle args = new Bundle();
+        //put the event passed as argument in the bundle
+        args.putString(HOME, new Gson().toJson(home));
+        //set the bundle as arg in the fragment
+        fragment.setArguments(args);
+        return fragment;
+
+    }
+
+    /**
+     * Method called when the fragment is created.
+     * The home passed in the argument is caught by the instance
+     *
+     * @param savedInstanceState The savedInstance passed. This argument should contains the bundle passed as argument when the new instance is declared.
+     * @see EventsFragment#newInstance(Home)
+     * @see Gson#fromJson(JsonElement, Class)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            width = getArguments().getInt(ARG_PARAM1);
-            height = getArguments().getInt(ARG_PARAM2);
+            this.home = new Gson().fromJson(getArguments().getString(HOME), Home.class);
         }
     }
 
@@ -69,29 +85,62 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment and start the Recycle view
-        View rootView= inflater.inflate(R.layout.fragment_news, container, false);
-        //TODO
-        this.height= (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,this.height, getResources().getDisplayMetrics());
-        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,this.height);
-        rootView.setLayoutParams(p);
-        //Configure the recycle view
-        RecyclerView mainListrv = (RecyclerView) rootView.findViewById(R.id.eventsList);
-        mainListrv.setItemAnimator(new DefaultItemAnimator());
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        mainListrv.setLayoutManager(llm);
-        //TODO ADD Data (as example some data are implemented)
-        RecyclerviewAdapter adapter = new RecyclerviewAdapter(DataExtractor.getCreateList());
-        mainListrv.setAdapter(adapter);
+        //get the URL from the resources
+        String url = getString(R.string.Server_URL);
+        // Creates the rootView with the corresponding layout inflated by the container
+        View rootView = inflater.inflate(R.layout.fragment_events, container, false);
+        //Gets the Imageview in order to inflate it with the image
+        final ImageView mImageView = (ImageView) rootView.findViewById(R.id.imageEvents);
+
+        if (home != null) {
+            // Retrieves an image specified by the URL, displays it in the UI.
+            ImageRequest request = new ImageRequest(url + home.getPictureEvents(),
+                    new Response.Listener<Bitmap>() {
+
+                        @Override
+                        public void onResponse(Bitmap bitmap) {
+                            //when the response is sent by the server, set the  image to the view
+                            mImageView.setImageBitmap(bitmap);
+                        }
+                    }, 0, 0, null,
+                    new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            mImageView.setImageResource(R.drawable.ic_drawer);
+                            Log.e(TAG, "Image request error: " + error);
+                        }
+                    });
+            //Calls the application controller and add the request to queue
+            ApplicationController.getInstance().getRequestQueue().add(request);
+            Log.d(TAG, "URL send for the picture: " + url + home.getPictureEvents());
+        }
+
+        //Gets the Title textView and inflates it with the Events title
+        TextView Title = (TextView) rootView.findViewById(R.id.TitleEvents);
+        Title.setText(home.getEventsTitle());
+
+        //Gets the Title1 textView and inflates it with the event 1 title
+        TextView Title1 = (TextView) rootView.findViewById(R.id.Events_Title_1);
+        if (home != null && home.getEvent1() != null) {
+            Title1.setText(home.getEvent1().getTitle());
+        }
+        //Gets the Title2 textView and inflates it with the event 2 title
+        TextView Title2 = (TextView) rootView.findViewById(R.id.Events_Title_2);
+        if (home != null && home.getEvent2() != null) {
+            Title2.setText(home.getEvent2().getTitle());
+        }
+        Button EventsButton = (Button) rootView.findViewById(R.id.Events_buttom);
+
+        //set the listener for the events button
+        EventsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity activity = (MainActivity) getActivity();
+                //when the button is clicked, the events page should be displayed
+                activity.onNavigationDrawerItemSelected(2);
+            }
+        });
 
         return rootView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -110,29 +159,18 @@ public class EventsFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-    public void resizeFragment(int newWidth, int newHeight) {
-        if (this != null) {
-            View view = this.getView();
-            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(newWidth, newHeight);
-            view.setLayoutParams(p);
-            view.requestLayout();
-        }
-    }
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     *
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
-
-
 
 }

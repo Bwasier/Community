@@ -1,9 +1,45 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="fr.solucom.community.KnowledgeManagementFragment">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="1dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+
+        <ImageView
+            android:id="@+id/imageDetailKM"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="vertical"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/TitleDetailKM"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/KM_Description"
+            android:background="#50000000"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:textColor="#fff"
+            android:textSize="22dp" />
+
+
+        <TextView
+            android:id="@+id/KM_Description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageDetailKM"
+            android:layout_marginBottom="2dp"
+            android:minHeight="100dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp"
+            android:textSize="14dp" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

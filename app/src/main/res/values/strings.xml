@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Comm\'unity</string>
 
-    <string name="title_section1">Accueil de l\'étage</string>
+    <string name="title_section1">Bienvenue à l\'étage </string>
     <string name="title_section2">Actualités</string>
     <string name="title_section3">Evenements</string>
     <string name="title_section4">Knowledge Management</string>
@@ -13,10 +13,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Paramètres</string>
 
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello Home fragment =) </string>
     <string name="title_activity_news">News</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_events">EventsActivity</string>
+
+    <string name="Server_URL">http://10.100.203.13/</string>
+
 </resources>
