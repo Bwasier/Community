@@ -117,6 +117,7 @@ public class MainActivity extends Activity
         // find the retained fragment on activity restarts
         dataFragment = (RetainedFragment) getFragmentManager().findFragmentByTag("dataRetained");
 
+        // if the dataFragment is null the activity is a new one
         if (dataFragment == null) {
             // Check if parameters are correct
             if (UUIDbeacon != null && major != 0 && minor != 0) {
@@ -135,6 +136,7 @@ public class MainActivity extends Activity
                 });
 
             }
+            //Else the orientation of the screen has been changed and the activity is not new
         } else {
             //Get the data retained from the fragment
             this.home = dataFragment.getHomeData();
@@ -313,7 +315,6 @@ public class MainActivity extends Activity
      */
     public void updateData(JSONObject JsonObject) {
         this.home = DataUpdator.updateData(JsonObject);
-        dataFragment.RetainHomeData(this.home);
         mTitle = home.getTitle();
         onNavigationDrawerItemSelected(0);
         restoreActionBar();
@@ -332,7 +333,6 @@ public class MainActivity extends Activity
      */
     public void updateGeneralData(JSONObject JsonObject) {
         this.generalData = DataUpdator.updateGeneralData(JsonObject);
-        dataFragment.RetainGeneralData(this.generalData);
         //when general data are received, collect home data
         DataCollector.collectHomeData(url, UUIDbeacon, major, minor, "home", new DataCollector.VolleyCallback() {
             @Override
