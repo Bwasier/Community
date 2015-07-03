@@ -12,5 +12,11 @@
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
+
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
+    </style>
+
+    <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">#ffffff</item>
     </style>
 </resources>

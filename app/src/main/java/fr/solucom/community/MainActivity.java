@@ -68,6 +68,8 @@ public class MainActivity extends Activity
     GeneralData generalData = null;
     //Fragment managing the behaviors, interactions and presentation of the navigation drawer.
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    //Fragment used to retain data when application is switched to landscape mode
+    private RetainedFragment dataFragment;
 
     /**
      * CharSequence used to store the last screen title.
@@ -90,6 +92,7 @@ public class MainActivity extends Activity
         // used to check if the bluetooth is one
         ConnectionsChecker.checkBluetoothAdapter(this);
         //used to check if the internet connection is active
+
         ConnectionsChecker.checkInternetAccess(this);
 
         if (savedInstanceState == null) {
@@ -111,29 +114,42 @@ public class MainActivity extends Activity
                 minor = extras.getInt("minor");
             }
         }
-        // Check if parameters are correct
-        if (UUIDbeacon != null && major != 0 && minor != 0) {
-            //Logs the beacon detected
-            Log.d(TAG, "collectData called with : UUID :" + UUIDbeacon + " major: " + major + " minor: " + minor);
-            //Uses the DataCollector collectGeneralData method with parameters caught.
-            DataCollector.collectGeneralData(url, new DataCollector.VolleyCallback() {
-                @Override
-                public void onSuccess(JSONObject jsonObject) {
-                    updateGeneralData(jsonObject);
-                }
-            });
-            DataCollector.collectHomeData(url, UUIDbeacon, major, minor, "home", new DataCollector.VolleyCallback() {
-                @Override
-                public void onSuccess(JSONObject jsonObject) {
-                    updateData(jsonObject);
-                }
-            });
+        // find the retained fragment on activity restarts
+        dataFragment = (RetainedFragment) getFragmentManager().findFragmentByTag("dataRetained");
+
+        if (dataFragment == null) {
+            // Check if parameters are correct
+            if (UUIDbeacon != null && major != 0 && minor != 0) {
+                //Logs the beacon detected
+                Log.d(TAG, "collectData called with : UUID :" + UUIDbeacon + " major: " + major + " minor: " + minor);
+                //Create a new retained fragment to retain data is case of switching to landscape mode
+                dataFragment = new RetainedFragment();
+                //Add the fragment to the fragment manager
+                getFragmentManager().beginTransaction().add(dataFragment, "dataRetained").commit();
+                //Uses the DataCollector collectGeneralData method with parameters caught.
+                DataCollector.collectGeneralData(url, new DataCollector.VolleyCallback() {
+                    @Override
+                    public void onSuccess(JSONObject jsonObject) {
+                        updateGeneralData(jsonObject);
+                    }
+                });
+
+            }
+        } else {
+            //Get the data retained from the fragment
+            this.home = dataFragment.getHomeData();
+            this.generalData = dataFragment.getGeneralData();
+            mTitle = home.getTitle();
+            onNavigationDrawerItemSelected(0);
+            restoreActionBar();
         }
         // select the appropriate view for main activity
         setContentView(R.layout.activity_main);
         //select the appropriate navigation drawer
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     /**
@@ -145,17 +161,19 @@ public class MainActivity extends Activity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        //Activity uses two fragments. First, fragments should be initialized
-        Fragment fragment1 = null;
-        Fragment fragment2 = null;
 
-        //get the fragment manager
-        FragmentManager fragmentManager = getFragmentManager();
-        //get the fragment transaction from the fragment manager
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        //According to the item selected by the user (position), different fragments are implemented
         if (home != null && generalData != null) {
+
+            //Activity uses two fragments. First, fragments should be initialized
+            Fragment fragment1 = null;
+            Fragment fragment2 = null;
+
+            //get the fragment manager
+            FragmentManager fragmentManager = getFragmentManager();
+            //get the fragment transaction from the fragment manager
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            //According to the item selected by the user (position), different fragments are implemented
             switch (position) {
 
                 // default is the home so call the NewsFragment and the EventsFragment to display information on home page
@@ -213,10 +231,9 @@ public class MainActivity extends Activity
             // update the content of frags then commit
             fragmentTransaction.commit();
             //if the data are not yet received, launches again the method
+
         }
-
     }
-
 
     /**
      * Method called to restore the action bar
@@ -295,12 +312,12 @@ public class MainActivity extends Activity
      * @see Gson
      */
     public void updateData(JSONObject JsonObject) {
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         this.home = DataUpdator.updateData(JsonObject);
+        dataFragment.RetainHomeData(this.home);
         mTitle = home.getTitle();
         onNavigationDrawerItemSelected(0);
         restoreActionBar();
+
     }
 
     /**
@@ -315,5 +332,24 @@ public class MainActivity extends Activity
      */
     public void updateGeneralData(JSONObject JsonObject) {
         this.generalData = DataUpdator.updateGeneralData(JsonObject);
+        dataFragment.RetainGeneralData(this.generalData);
+        //when general data are received, collect home data
+        DataCollector.collectHomeData(url, UUIDbeacon, major, minor, "home", new DataCollector.VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                updateData(jsonObject);
+            }
+        });
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // store the data in the fragment
+        if (this.home != null && this.generalData != null) {
+            dataFragment.RetainHomeData(this.home);
+            dataFragment.RetainGeneralData(this.generalData);
+        }
+    }
+
 }
