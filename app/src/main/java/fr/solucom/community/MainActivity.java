@@ -56,16 +56,35 @@ public class MainActivity extends Activity
 
     // TAG used for the debug mode
     private static final String TAG = "MainActivity";
-    //Beacon UUID the UUID caugth by the service Estimote Manager)
+    /**
+     * The Beacon UUID caught by the Estimote Service
+     */
     public String UUIDbeacon = null;
-    //Default beacon major
+    /**
+     * The beacon major field caught by the Estimote Service
+     */
     public int major = 0;
-    //Default beacon minor
+    /**
+     * The beacon major field caught by the Estimote Service
+     */
     public int minor = 0;
-    //Default message for floor
-    String url = null;
+
+    /**
+     * The home object of the activity
+     *
+     * @see fr.solucom.communitylibrary.Home
+     */
     Home home = null;
+    /**
+     * The general data object of the activity
+     *
+     * @see fr.solucom.communitylibrary.GeneralData
+     */
     GeneralData generalData = null;
+    /**
+     * The server root url
+     */
+    String url = null;
     //Fragment managing the behaviors, interactions and presentation of the navigation drawer.
     private NavigationDrawerFragment mNavigationDrawerFragment;
     //Fragment used to retain data when application is switched to landscape mode
@@ -135,6 +154,9 @@ public class MainActivity extends Activity
                     }
                 });
 
+            } else {
+                //If the major and minor are set to 0, the user is out of the beacon region
+                this.finish();
             }
             //Else the orientation of the screen has been changed and the activity is not new
         } else {
@@ -167,8 +189,8 @@ public class MainActivity extends Activity
         if (home != null && generalData != null) {
 
             //Activity uses two fragments. First, fragments should be initialized
-            Fragment fragment1 = null;
-            Fragment fragment2 = null;
+            Fragment fragment1;
+            Fragment fragment2;
 
             //get the fragment manager
             FragmentManager fragmentManager = getFragmentManager();
@@ -246,15 +268,19 @@ public class MainActivity extends Activity
         //get the action bar
         ActionBar actionBar = getActionBar();
         //enables to diplay the title
-        actionBar.setDisplayShowTitleEnabled(true);
-        //update the title
-        actionBar.setTitle(mTitle);
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            //update the title
+            actionBar.setTitle(mTitle);
+        }
     }
 
     /**
      *
-     * @param menu
-     * @return
+     * @param   menu  The options menu in which you place your items.
+
+     * @return true for the menu to be displayed
+     *
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -276,8 +302,9 @@ public class MainActivity extends Activity
 
     /**
      *
-     * @param item
-     * @return
+     * @param item The menu item that was selected.
+
+     * @return Return false to allow normal menu processing to proceed, true to consume it here.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -297,8 +324,9 @@ public class MainActivity extends Activity
     }
 
     /**
+     * This interface implements the interface OnFragmentInteractionListener for all fragments
      *
-     * @param uri
+     * @param uri Immutable URI reference
      */
     public void onFragmentInteraction(Uri uri) {
         //leave it empty

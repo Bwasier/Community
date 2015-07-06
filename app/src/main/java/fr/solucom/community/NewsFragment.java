@@ -79,8 +79,9 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-
+        if (getActivity().getActionBar() != null) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         // get the server url in the string resources
         String url = getString(R.string.Server_URL);
 
@@ -100,7 +101,7 @@ public class NewsFragment extends Fragment {
                             //when the response is sent by the server, set the  image to the view
                             mImageView.setImageBitmap(bitmap);
                         }
-                    }, 0, 0, null,
+                    }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
                     new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                             mImageView.setImageResource(R.drawable.ic_drawer);
@@ -142,12 +143,6 @@ public class NewsFragment extends Fragment {
         });
 
         return rootView;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override

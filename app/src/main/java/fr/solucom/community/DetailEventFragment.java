@@ -28,10 +28,10 @@ import fr.solucom.communitylibrary.Event;
 public class DetailEventFragment extends Fragment {
     private static final String EVENT = "event";
     private static final String TAG = "DetailEventFragment";
+    //Initializes the listener
+    public OnFragmentInteractionListener mListener;
     //Initializes the event that will be use to inflate the view
     private Event event;
-    //Initializes the listener
-    private OnFragmentInteractionListener mListener;
 
     public DetailEventFragment() {
         // Required empty public constructor
@@ -107,7 +107,7 @@ public class DetailEventFragment extends Fragment {
                             //when the response is sent by the server, set the event image to the view
                             mImageView.setImageBitmap(bitmap);
                         }
-                    }, 0, 0, null,
+                    }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
                     new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                             mImageView.setImageResource(R.drawable.ic_drawer);

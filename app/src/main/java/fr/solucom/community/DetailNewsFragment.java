@@ -28,10 +28,10 @@ import fr.solucom.communitylibrary.News;
 public class DetailNewsFragment extends Fragment {
     private static final String ARG_PARAM1 = "news";
     private static final String TAG = "DetailNewsFragment";
+    //Initializes the listener
+    public OnFragmentInteractionListener mListener;
     //Initializes the news that will be use to inflate the view
     private News news;
-    //Initializes the listener
-    private OnFragmentInteractionListener mListener;
 
     public DetailNewsFragment() {
         // Required empty public constructor
@@ -107,7 +107,7 @@ public class DetailNewsFragment extends Fragment {
                             //when the response is sent by the server, set the event image to the view
                             mImageView.setImageBitmap(bitmap);
                         }
-                    }, 0, 0, null,
+                    }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
                     new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                             mImageView.setImageResource(R.drawable.ic_drawer);

@@ -26,9 +26,9 @@ public class SetMenuFragment extends Fragment {
 
     private static final String MENU = "menu";
     private static final String TAG = "SetMenuFragment";
+    public OnFragmentInteractionListener mListener;
     // initializes the home that will be used to inflate the view
     private SetMenu menu;
-    private OnFragmentInteractionListener mListener;
 
     public SetMenuFragment() {
         // Required empty public constructor
@@ -95,7 +95,7 @@ public class SetMenuFragment extends Fragment {
                             //when the response is sent by the server, set the  image to the view
                             mImageView.setImageBitmap(bitmap);
                         }
-                    }, 0, 0, null,
+                    }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
                     new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                             mImageView.setImageResource(R.drawable.ic_drawer);

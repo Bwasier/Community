@@ -26,8 +26,8 @@ public class SolucomFragment extends Fragment {
 
     private static final String SolucomArticle = "SolucomArticle";
     private static final String TAG = "SolucomFragment";
+    public OnFragmentInteractionListener mListener;
     private SolucomArticle article;
-    private OnFragmentInteractionListener mListener;
 
     public SolucomFragment() {
         // Required empty public constructor
@@ -94,7 +94,7 @@ public class SolucomFragment extends Fragment {
                             //when the response is sent by the server, set the  image to the view
                             mImageView.setImageBitmap(bitmap);
                         }
-                    }, 0, 0, null,
+                    }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
                     new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                             mImageView.setImageResource(R.drawable.ic_drawer);

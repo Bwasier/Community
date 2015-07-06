@@ -7,10 +7,6 @@ import fr.solucom.communitylibrary.GeneralData;
 import fr.solucom.communitylibrary.Home;
 
 /**
- * Created by wasier on 03/07/2015.
- */
-
-/**
  * This fragment is used to retain data when the orientation is changed
  */
 public class RetainedFragment extends Fragment {

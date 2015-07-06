@@ -30,10 +30,10 @@ import fr.solucom.communitylibrary.Home;
 public class EventsFragment extends Fragment {
     private static final String HOME = "home";
     private static final String TAG = "EventsFragment";
+    //Initializes the listener
+    public OnFragmentInteractionListener mListener;
     // initializes the home that will be used to inflate the view
     private Home home;
-    //Initializes the listener
-    private OnFragmentInteractionListener mListener;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -102,7 +102,7 @@ public class EventsFragment extends Fragment {
                             //when the response is sent by the server, set the  image to the view
                             mImageView.setImageBitmap(bitmap);
                         }
-                    }, 0, 0, null,
+                    }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
                     new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                             mImageView.setImageResource(R.drawable.ic_drawer);
@@ -169,7 +169,6 @@ public class EventsFragment extends Fragment {
      *
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 

@@ -26,10 +26,10 @@ public class KnowledgeManagementFragment extends Fragment {
 
     private static final String KM = "KM";
     private static final String TAG = "KMFragment";
+    //Initializes the listener
+    public OnFragmentInteractionListener mListener;
     // initializes the KM article that will be used to inflate the view
     private KMArticle KMArticle;
-    //Initializes the listener
-    private OnFragmentInteractionListener mListener;
 
     public KnowledgeManagementFragment() {
         // Required empty public constructor
@@ -95,7 +95,7 @@ public class KnowledgeManagementFragment extends Fragment {
                             //when the response is sent by the server, set the  image to the view
                             mImageView.setImageBitmap(bitmap);
                         }
-                    }, 0, 0, null,
+                    }, 0, 0, ImageView.ScaleType.CENTER_CROP, null,
                     new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                             mImageView.setImageResource(R.drawable.ic_drawer);
