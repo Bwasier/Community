@@ -17,6 +17,7 @@ package fr.solucom.communitylibrary;
 
 public class Home {
 
+    private String _id;
     //The title displayed on the home (i.e. floor) page
     private String title;
     //The floor number (e.g 17, 21, 26)

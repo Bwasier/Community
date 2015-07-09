@@ -4,9 +4,10 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 /**
  * This class is used to get JSON object from the server side.
@@ -36,9 +37,9 @@ public class DataCollector {
         //log the url
         Log.i(TAG, "url used for the request" + url);
         //Creates a new resquest using volley.
-        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(JSONObject jsonObject) {
+            public void onResponse(JSONArray jsonObject) {
                 try {
                     //when the response is returned, call back the activity
                     callback.onSuccess(jsonObject);
@@ -75,9 +76,9 @@ public class DataCollector {
         Log.i(TAG, "url used for the request" + url);
 
         //Creates a new request using volley.
-        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(JSONObject jsonObject) {
+            public void onResponse(JSONArray jsonObject) {
                 try {
                     //when the response is returned, callback the activity
                     callback.onSuccess(jsonObject);
@@ -98,7 +99,7 @@ public class DataCollector {
     }
 
     public interface VolleyCallback {
-        void onSuccess(JSONObject jsonObject);
+        void onSuccess(JSONArray jsonObject);
     }
 
 }

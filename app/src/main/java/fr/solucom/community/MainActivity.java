@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import fr.solucom.communitylibrary.ConnectionsChecker;
@@ -149,7 +150,7 @@ public class MainActivity extends Activity
                 //Uses the DataCollector collectGeneralData method with parameters caught.
                 DataCollector.collectGeneralData(url, new DataCollector.VolleyCallback() {
                     @Override
-                    public void onSuccess(JSONObject jsonObject) {
+                    public void onSuccess(JSONArray jsonObject) {
                         updateGeneralData(jsonObject);
                     }
                 });
@@ -341,7 +342,7 @@ public class MainActivity extends Activity
      * @see DataCollector
      * @see Gson
      */
-    public void updateData(JSONObject JsonObject) {
+    public void updateData(JSONArray JsonObject) {
         this.home = DataUpdator.updateData(JsonObject);
         mTitle = home.getTitle();
         onNavigationDrawerItemSelected(0);
@@ -359,12 +360,12 @@ public class MainActivity extends Activity
      * @see DataUpdator
      * @see Gson
      */
-    public void updateGeneralData(JSONObject JsonObject) {
+    public void updateGeneralData(JSONArray JsonObject) {
         this.generalData = DataUpdator.updateGeneralData(JsonObject);
         //when general data are received, collect home data
         DataCollector.collectHomeData(url, UUIDbeacon, major, minor, "home", new DataCollector.VolleyCallback() {
             @Override
-            public void onSuccess(JSONObject jsonObject) {
+            public void onSuccess(JSONArray jsonObject) {
                 updateData(jsonObject);
             }
         });

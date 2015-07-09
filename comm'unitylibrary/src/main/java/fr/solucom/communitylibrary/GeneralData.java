@@ -17,6 +17,8 @@ package fr.solucom.communitylibrary;
  * @see SolucomArticle
  */
 public class GeneralData {
+
+    private String _id;
     //The title of the Knowledge management page
     private String kmtitle;
     //The title of the restaurant menu page
